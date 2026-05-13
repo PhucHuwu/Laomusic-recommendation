@@ -96,7 +96,7 @@ class RecommenderService:
             return scores
         ids = list(scores.keys())
         placeholders = ",".join([f":id_{i}" for i in range(len(ids))])
-        params = {f"id_{i}": sid for i, sid in enumerate(ids)}
+        params: dict[str, object] = {f"id_{i}": sid for i, sid in enumerate(ids)}
         query = text(
             f"""
             SELECT aq.song_id,
@@ -127,7 +127,7 @@ class RecommenderService:
             return scores
         ids = list(scores.keys())
         placeholders = ",".join([f":id_{i}" for i in range(len(ids))])
-        params = {f"id_{i}": sid for i, sid in enumerate(ids)}
+        params: dict[str, object] = {f"id_{i}": sid for i, sid in enumerate(ids)}
         params["premium_type"] = settings.premium_song_type
         query = text(
             f"""
@@ -248,7 +248,7 @@ class RecommenderService:
 
     def _popular_candidates(self, limit: int, language: str | None = None) -> dict[str, float]:
         language_filter = ""
-        params = {"limit": limit}
+        params: dict[str, object] = {"limit": limit}
         if language:
             language_filter = "AND s.language = :language"
             params["language"] = language
