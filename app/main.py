@@ -38,7 +38,12 @@ async def request_context_middleware(request: Request, call_next):
         )
         return JSONResponse(
             status_code=500,
-            content={"error": "internal_server_error", "request_id": request_id, "latency_ms": latency_ms, "detail": str(e)},
+            content={
+                "error": "internal_server_error",
+                "request_id": request_id,
+                "latency_ms": latency_ms,
+                "detail": str(e),
+            },
         )
     latency_ms = round((time.perf_counter() - start) * 1000, 2)
     response.headers["x-request-id"] = request_id

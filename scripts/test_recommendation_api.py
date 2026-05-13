@@ -70,10 +70,27 @@ def main() -> None:
     print(json.dumps(p, ensure_ascii=False, indent=2))
     payload = {"user_id": p["user_id"], "song_id": p["song_id"], "limit": args.limit, "language": p["language"]}
     endpoints = [
-        ("/recommend/user", {"user_id": payload["user_id"], "limit": payload["limit"], "language": payload["language"]}),
-        ("/recommend/similar-song", {"song_id": payload["song_id"], "limit": payload["limit"], "language": payload["language"]}),
-        ("/recommend/playlist", {"user_id": payload["user_id"], "seed_song_id": payload["song_id"], "limit": payload["limit"], "language": payload["language"]}),
-        ("/recommend/guest", {"current_song_id": payload["song_id"], "limit": payload["limit"], "language": payload["language"]}),
+        (
+            "/recommend/user",
+            {"user_id": payload["user_id"], "limit": payload["limit"], "language": payload["language"]},
+        ),
+        (
+            "/recommend/similar-song",
+            {"song_id": payload["song_id"], "limit": payload["limit"], "language": payload["language"]},
+        ),
+        (
+            "/recommend/playlist",
+            {
+                "user_id": payload["user_id"],
+                "seed_song_id": payload["song_id"],
+                "limit": payload["limit"],
+                "language": payload["language"],
+            },
+        ),
+        (
+            "/recommend/guest",
+            {"current_song_id": payload["song_id"], "limit": payload["limit"], "language": payload["language"]},
+        ),
     ]
     for ep, body in endpoints:
         r = requests.post(f"{args.base_url}{ep}", json=body, timeout=args.timeout)

@@ -71,7 +71,9 @@ class RecommenderService:
                 tuned[sid] = float(sc) * settings.long_tail_boost_for_heavy
         return tuned
 
-    def _ensure_long_tail_slots_for_heavy(self, user_id: str, ranked_items: list[tuple[str, float]], limit: int) -> list[tuple[str, float]]:
+    def _ensure_long_tail_slots_for_heavy(
+        self, user_id: str, ranked_items: list[tuple[str, float]], limit: int
+    ) -> list[tuple[str, float]]:
         event_count = self._get_user_event_count(user_id)
         if event_count < settings.heavy_user_event_threshold:
             return ranked_items[:limit]
@@ -441,7 +443,9 @@ class RecommenderService:
         ranked = self._top_n(scores, max(limit * 3, limit))
         return self._ensure_premium_slots(ranked, limit)
 
-    def recommend_for_playlist(self, user_id: str, seed_song_id: str | None, limit: int, language: str | None = None) -> list[tuple[str, float]]:
+    def recommend_for_playlist(
+        self, user_id: str, seed_song_id: str | None, limit: int, language: str | None = None
+    ) -> list[tuple[str, float]]:
         user_scores = dict(self.recommend_for_user(user_id, limit=300, language=language))
         if not seed_song_id:
             return self._top_n(user_scores, limit)
@@ -458,7 +462,9 @@ class RecommenderService:
         ranked = self._ensure_long_tail_slots_for_heavy(user_id, ranked, limit)
         return ranked
 
-    def recommend_for_guest(self, limit: int, language: str | None = None, current_song_id: str | None = None) -> list[tuple[str, float]]:
+    def recommend_for_guest(
+        self, limit: int, language: str | None = None, current_song_id: str | None = None
+    ) -> list[tuple[str, float]]:
         base = self._popular_candidates(limit=300, language=language)
         if current_song_id:
             similar = dict(self.recommend_similar_song(current_song_id, limit=300, language=language))
