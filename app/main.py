@@ -8,6 +8,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from app.database import engine
+from app.logging_config import setup_json_logging
 from app.recommender import RecommenderService
 from app.schemas import (
     GuestRecommendationRequest,
@@ -20,8 +21,8 @@ from app.schemas import (
 
 app = FastAPI(title="Laomusic Recommendation API", version="0.1.0")
 service = RecommenderService(engine)
+setup_json_logging()
 logger = logging.getLogger("laomusic_recommendation")
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
 
 @app.middleware("http")
@@ -33,7 +34,10 @@ async def request_context_middleware(request: Request, call_next):
         response = await call_next(request)
     except Exception as e:
         latency_ms = round((time.perf_counter() - start) * 1000, 2)
-        logger.exception("request_failed request_id=%s path=%s latency_ms=%.2f", request_id, request.url.path, latency_ms)
+        logger.exception(
+            "request_failed",
+            extra={"request_id": request_id, "path": request.url.path, "latency_ms": latency_ms, "status_code": 500},
+        )
         return JSONResponse(
             status_code=500,
             content={"error": "internal_server_error", "request_id": request_id, "latency_ms": latency_ms, "detail": str(e)},
@@ -41,7 +45,15 @@ async def request_context_middleware(request: Request, call_next):
     latency_ms = round((time.perf_counter() - start) * 1000, 2)
     response.headers["x-request-id"] = request_id
     response.headers["x-latency-ms"] = str(latency_ms)
-    logger.info("request_ok request_id=%s path=%s status=%s latency_ms=%.2f", request_id, request.url.path, response.status_code, latency_ms)
+    logger.info(
+        "request_ok",
+        extra={
+            "request_id": request_id,
+            "path": request.url.path,
+            "status_code": response.status_code,
+            "latency_ms": latency_ms,
+        },
+    )
     return response
 
 

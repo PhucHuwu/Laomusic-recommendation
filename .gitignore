@@ -1,5 +1,39 @@
-docs/
+# Environment and secrets
 .env
-.vscode/
+.env.*
+!.env.example
+!.env.dev.example
+!.env.prod.example
+
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+.Python
 .venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+docs/
