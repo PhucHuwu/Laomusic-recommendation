@@ -25,7 +25,7 @@ def mysql_url_from_env(db_url: str, username: str, password: str) -> str:
 
     if "useSSL" in raw_qs:
         use_ssl = raw_qs["useSSL"].lower() == "true"
-        mapped_qs["ssl_disabled"] = str((not use_ssl)).lower()
+        mapped_qs["ssl_disabled"] = str(not use_ssl).lower()
 
     mapped_qs.setdefault("charset", "utf8mb4")
     mapped_qs.setdefault("connect_timeout", "10")
