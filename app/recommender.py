@@ -155,7 +155,7 @@ class RecommenderService:
             return ranked_items
         ids = [sid for sid, _ in ranked_items]
         placeholders = ",".join([f":id_{i}" for i in range(len(ids))])
-        params = {f"id_{i}": sid for i, sid in enumerate(ids)}
+        params: dict[str, object] = {f"id_{i}": sid for i, sid in enumerate(ids)}
         params["premium_type"] = settings.premium_song_type
         query = text(
             f"""
